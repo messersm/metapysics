@@ -54,8 +54,7 @@ The callbacks are called _after_ executing append or remove:
 
 Be aware, that only attribute names, that are not used by the list class
 are overwritten, so if list implemented a attribute name, you can't use
-it with ILists (unless you subclass them and overwrite the attribute
-name). The following code doesn't work, because list implements
+it in this way. The following code doesn't work, because list implements
 '__add__' (so the result is NOT [4, 5] as one could expect):
 
     >>> l = IList([1, 2])
