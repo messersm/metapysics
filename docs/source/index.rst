@@ -1,6 +1,6 @@
 mtoolbox
 ========
-A collection of (meta-)programming tool for Python.
+A collection of (meta-)programming tools for Python.
 
 Contents:
 
