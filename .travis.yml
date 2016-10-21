@@ -1,20 +1,22 @@
 language: python
 python:
-  - '2.6'
-  - '2.7'
-  - '3.2'
-  - '3.3'
-  - '3.4'
-  - '3.5'
+- '2.6'
+- '2.7'
+- '3.2'
+- '3.3'
+- '3.4'
+- '3.5'
 install:
-  - pip install coveralls
-  - pip install 'coverage<4'
+- pip install coveralls
+- pip install 'coverage<4'
 script: nosetests --with-doctest --with-coverage --cover-package=mtoolbox
 after_success: coveralls
 deploy:
   provider: pypi
   user: messersm
+  password:
+    secure: sNGXqKJHBKDFJfs1MmjHExaU2UUv//ZaIX2Y/GLdz2NoMJuE2MAt9h3eWpeul8TSqAQTKw+t4o7oUubR5U32vWEd9kogEvbmDGIjA1Gu/Z3cNSLDbbVR2GT8Ktl5lsz47GmV8HZIh9IK1Z5WKS4SJnZiEvGWEi5I1XfPtWj0mWsxGiO/QcuEAkoiP+hV7SMLl8CEGCO5Bt3NXvw/jDQFsbQiGX9LsIZQRpRCodNe9Wv5of/Ly/Hou9/LwPx/LOYVv+dmeHiGbTK9HqmkizccJ1Z1EH/VjSw9YcKka+McWjl4jgmus/22jU82mA4pGooWd12Egp6fj1ODgNkZs3p/aZCMjw7pZLKBV/WS1HGWfOO145xQ72AvPgyzucaVHdChHZoMzjjLkM+lsNPbuO1cbdvrGuIRmkeBcgyeRMEJ7rku0N3zCgqkgWGstFlLi72WZ+GJk5JpSevA4P9BXba+XYno0SMrl4vfCDpsFE8byBtKhUsirdaFd0URi9AW15gBdpiIS/RPRvlvm3pWaHWz2bIGkgTE+CyEDuKokAHCa0c0MX9b6PV5+PkLH9CDvlZIFz0QF7IIltArP3d7kP7N7zn7INw0E2kAp5AJotA9IHWZT/5KMIJGAVWggvghiovvVhg2CImJlQ6NbOsI7NTJrs/7vyDssbVuJI+3tR4aJ4o=
   on:
     tags: true
-  password:
-    secure: OXXQ2kvCwOymVE3tCxDuhYfkPW+YE78keFa8WP3Wlc2DhVEqO2acFxhVfXb+qM+t7MMvvnpSHr2QvUWjlgfqaOvY37Jj/zottnXhuW6N/Ju27uO1Qg9Tbb7oYREz3H6A5UCDVUIzBj6R6mcJbCxaveC0QjY2er0ZAfKEEUKT7GifMirbw3NzP1kVYvqcrqhHZ4t058kh3TSrH1FSOtMT8O5LewraDkn2tczgxtKtjfau51Gaqd0BdbxjAHwypsJdiqajSMOXIJld833xk28aOqtP2l9T1BI9qTTj8nsFJUTvFs3nAu01l1hGoU/6qEAqDg1w0uYTXWcM9qm1LX8ai8KhU4q9/s/ZdCWQw2NSVtgoHbRNDlt6uEpyDDeLQXOqRU6R4YK3GuPr5htkTBf3hTutTbGD2T9YsikzAirT4U5ihh3b+KwnEUna4W//R+4x2N+PEkc80x4fJ/h+ruVXJJ2CwViMBvycHZ76ShYqkctSiFOQFgg1yuHoYYvoFHzjUNQr25812e4KRMCKmrmm78r42KIKMWl+PmmrVRJLZT+UrU65VJNN2GHMDYa3DxRl6IJ7qtUyhTexInzICbA68hU57XyqtH5fXwSAwnJYRHpfAXOB9GpOt7o7BWz+5l+fJp2loaSzMub3ePwXAz9k5HL+jnoXWdYbu+NdslBB3cg=
+    distributions: sdist bdist_wheel
+    repo: messersm/mtoolbox
