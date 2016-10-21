@@ -2,11 +2,9 @@
 
 """Module to provide an 'intelligent' list class
 
-ILists are useful, if you have a number of simular objects,
-on which you would like to access the same properties and store
-these properties in a new list, which basically means:
+The IList class translates attribute access to the items it holds:
 
-``an_ilist.<name> == IList([obj.<name> for obj in an_ilist])``
+``l.<name> == IList([obj.<name> for obj in l])``
 
 Import the IList class using ``from mtoolbox.ilist import IList``.
 
@@ -54,12 +52,6 @@ The callbacks are called _after_ executing append or remove:
     ...     pass
     >>> l = IList(on_append=valid_callback, on_remove=valid_callback2)
 
-ILists implement the __abs__ special method:
-
-    >>> l = IList([complex(3, 4), complex(6)])
-    >>> abs(l)
-    [5.0, 6.0]
-
 Be aware, that only attribute names, that are not used by the list class
 are overwritten, so if list implemented a attribute name, you can't use
 it with ILists (unless you subclass them and overwrite the attribute
@@ -72,8 +64,11 @@ name). The following code doesn't work, because list implements
     ...
     TypeError: can only concatenate list (not "int") to list
 
-You can also apply any function f to the items of an IList l by
-calling ``l.apply(f)`` (see method documentation).
+If you wish to access attributes with these names, you can use
+:func:`IList.getattr` (see method documentation).
+
+You can also apply any function to the items of an IList by
+calling :func:`IList.apply` (see method documentation).
 """
 
 import doctest
@@ -154,15 +149,15 @@ class IList(list):
         list.append(self, obj)
         self.__on_append(self, obj)
 
-    def apply(self, f):
-        """Apply f to the items of this IList
-        
+    def apply(self, func):
+        """Apply func to the items of this IList
+
         Args:
-            f (callable): function to apply to this IList's items
-        
+            func (callable): function to apply to this IList's items
+
         Returns:
             IList: An :class:`IList` instance
-        
+
         Usage:
             >>> def f(x):
             ...     return x**2
@@ -170,7 +165,23 @@ class IList(list):
             >>> l.apply(f)
             [0, 1, 4, 9, 16, 25]
         """
-        return IList([f(x) for x in self])
+        return IList([func(x) for x in self])
+
+    def getattr(self, name):
+        """
+
+        Args:
+            name (str): name of the items attributes to access
+
+        Returns:
+            IList: An IList instance
+
+        Usage:
+            >>> l = IList([3, 5, 4])
+            >>> l.getattr('__add__')(2)
+            [5, 7, 6]
+        """
+        return IList([getattr(obj, name) for obj in self])
 
     def remove(self, obj):
         """Remove obj from IList
@@ -201,9 +212,6 @@ class IList(list):
 
     def __call__(self, *args, **kwargs):
         return IList([obj(*args, **kwargs) for obj in self])
-
-    def __abs__(self):
-        return IList([abs(obj) for obj in self])
 
 if __name__ == '__main__':
     doctest.testmod()
