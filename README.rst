@@ -18,10 +18,10 @@ Documentation is available at:
 
 Examples
 --------
-The IList class translates attribute access to the items it holds:
-```python
->>> from mtoolbox.ilist import IList
->>> l = IList([complex(3, 4), complex(6)])
->>> l.real
-[3.0, 6.0]
-```
+The IList class translates attribute access to the items it holds::
+
+    >>> from mtoolbox.ilist import IList
+    >>> l = IList([complex(3, 4), complex(6)])
+    >>> l.real
+    [3.0, 6.0]
+
