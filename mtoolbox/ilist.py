@@ -148,23 +148,25 @@ class IList(list):
         list.append(self, obj)
         self.__on_append(self, obj)
 
-    def apply(self, func):
+    def apply(self, func, *args, **kwargs):
         """Apply func to the items of this IList
 
         Args:
             func (callable): function to apply to this IList's items
+            args (iterable): additional arguments for func
+            kwargs (dict)  : additional keyword arguments for func
 
         Returns:
             IList: An :class:`IList` instance
 
         Usage:
-            >>> def f(x):
-            ...     return x**2
+            >>> def f(x, pow=2):
+            ...     return x**pow
             >>> l = IList([0, 1, 2, 3, 4, 5])
-            >>> l.apply(f)
-            [0, 1, 4, 9, 16, 25]
+            >>> l.apply(f, pow=3)
+            [0, 1, 8, 27, 64, 125]
         """
-        return IList([func(x) for x in self])
+        return IList([func(x, *args, **kwargs) for x in self])
 
     def getattr(self, name):
         """
