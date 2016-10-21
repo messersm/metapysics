@@ -45,7 +45,7 @@ The callbacks are called _after_ executing append or remove:
     Traceback (most recent call last):
     ...
     TypeError: on_append and on_remove must accept 2 positional arguments
-    
+
     >>> def valid_callback(l=[], x=5):
     ...     pass
     >>> def valid_callback2(l, x=5, y=3):
@@ -76,7 +76,7 @@ import inspect
 
 class IList(list):
     """'intelligent' list object
-    
+
     Args:
         iterable (iterable): The
         on_append (callable): callback(list, item) for append()
@@ -84,7 +84,7 @@ class IList(list):
 
     Returns:
         IList: An :class:`IList` instance
-        
+
     Note:
         Both callbacks must accept two positional arguments
     """
@@ -131,7 +131,7 @@ class IList(list):
 
     def append(self, obj):
         """Add obj to IList
-        
+
         Args:
             obj (object): object to append to list
 
