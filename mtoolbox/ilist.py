@@ -71,6 +71,9 @@ name). The following code doesn't work, because list implements
     Traceback (most recent call last):
     ...
     TypeError: can only concatenate list (not "int") to list
+
+You can also apply any function f to the items of an IList l by
+calling ``l.apply(f)`` (see method documentation).
 """
 
 import doctest
@@ -150,6 +153,24 @@ class IList(list):
         """
         list.append(self, obj)
         self.__on_append(self, obj)
+
+    def apply(self, f):
+        """Apply f to the items of this IList
+        
+        Args:
+            f (callable): function to apply to this IList's items
+        
+        Returns:
+            IList: An :class:`IList` instance
+        
+        Usage:
+            >>> def f(x):
+            ...     return x**2
+            >>> l = IList([0, 1, 2, 3, 4, 5])
+            >>> l.apply(f)
+            [0, 1, 4, 9, 16, 25]
+        """
+        return IList([f(x) for x in self])
 
     def remove(self, obj):
         """Remove obj from IList
