@@ -1,6 +1,6 @@
-mtoolbox
-========
-A collection of (meta-)programming tools for Python.
+README
+======
+**mtoolbox** - A collection of (meta-)programming tools for Python.
 
 <https://github.com/messersm/mtoolbox>
 

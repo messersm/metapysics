@@ -6,7 +6,9 @@ ILists are useful, if you have a number of simular objects,
 on which you would like to access the same properties and store
 these properties in a new list, which basically means:
 
-``IList.<name> == IList([obj.<name> for obj in IList])``
+``an_ilist.<name> == IList([obj.<name> for obj in an_ilist])``
+
+Import the IList class using ``from mtoolbox.ilist import IList``.
 
 Example:
 
