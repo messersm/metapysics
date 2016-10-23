@@ -6,11 +6,15 @@ import mtoolbox
 version = mtoolbox.__version__
 description = mtoolbox.__doc__.split('\n')[0]
 
+with open('README.rst') as f:
+    long_description = f.read()
+
 setup(
     name = 'mtoolbox',
     packages = ['mtoolbox'],
     version = version,
     description = description,
+    long_description=long_description,
     author = 'Maik Messerschmidt',
     author_email = 'maik.messerschmidt@gmx.net',
     url = 'https://github.com/messersm/mtoolbox',
@@ -18,7 +22,7 @@ setup(
     keywords = ['mtoolbox'],
     classifiers = [
         'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: GNU Affero General Public License v3',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.2',
