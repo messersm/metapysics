@@ -115,7 +115,7 @@ class Autoname(object):
                 for name, obj in frametuple[0].f_locals.items():
                     # found a name, but keep searching in order to get
                     # the outer-most name
-                    if obj == theobject:
+                    if obj is theobject:
                         thename = name
                         if self.first:
                             return thename
