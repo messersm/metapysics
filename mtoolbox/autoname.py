@@ -24,59 +24,62 @@ for the object:
     >>> def func(anobject):
     ...     return anobject.name
     >>> o = Object()
-    >>> func(Object())
-    'anobject'
-    >>>
-    >>> g = o
-    >>> g.name
+    >>> func(o)
     'o'
-    >>> del o
-    >>> g.name
-    'g'
 
-You can change this behaviour by using the 'first' keyword:
+You can change this behaviour by using the 'inner' keyword:
 
     >>> class Object(object):
-    ...     name = Autoname(first=True)
+    ...     name = Autoname(inner=True)
     >>> o = Object()
-    >>> o.name
-    'o'
-    >>> g = o
-    >>> g.name
-    'g'
-    >>> o.name
-    'g'
+    >>> def func(anobject):
+    ...     return anobject.name
+    >>> func(o)
+    'anobject'
 
 Note:
     Please be aware, that getting the inner-most name, is not what you
     want in most cases:
 
     >>> class Object(object):
-    ...     name = Autoname(first=True)
+    ...     name = Autoname(inner=True)
     ...     def printname(self):
     ...         print(self.name)
     >>> o = Object()
     >>> o.printname()
     self
+
+Warning:
+    Defining multiple names for an object in the same call frame (which is
+    easily said the same level of indention in your program) will
+    cause undefinied behaviour, depending on the Python interpreter:
+
+    >>> class Object(object):
+    ...     name = Autoname()
+    >>> o = Object()
+    >>> g = o
+    >>> o.name in ['o', 'g']
+    True
 """
 
 import doctest
 import inspect
+
 
 class Autoname(object):
     """Create a new Autoname descriptor
 
     Args:
         initval (str, bool, None): The initial name
-        first (bool): Return the first found name of the object (or not)
+        inner (bool): Return the inner-most name of the object (or not)
 
     Returns:
         Autoname: An Autoname instance
     """
 
-    def __init__(self, initval=True, first=False):
+    def __init__(self, initval=True, inner=False):
         self.val = None
-        self.first = first
+        self.inner = inner
         self.__set__(None, initval)
 
     def __get__(self, theobject, objtype):
@@ -88,7 +91,7 @@ class Autoname(object):
         Usage:
 
             >>> class Object(object):
-            ...     name = Autoname(first=True)
+            ...     name = Autoname()
             >>> obj = Object()
             >>> obj.name
             'obj'
@@ -114,10 +117,10 @@ class Autoname(object):
 
                 for name, obj in frametuple[0].f_locals.items():
                     # found a name, but keep searching in order to get
-                    # the outer-most name
+                    # the outer-most name unless first is set.
                     if obj is theobject:
                         thename = name
-                        if self.first:
+                        if self.inner:
                             return thename
 
             return thename
@@ -168,5 +171,3 @@ class Autoname(object):
 
 if __name__ == '__main__':
     doctest.testmod()
-
-
