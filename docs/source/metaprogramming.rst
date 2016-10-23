@@ -1,6 +1,15 @@
 Metaprogramming
 ===============
 
+Autoname
+--------
+
+.. automodule:: mtoolbox.autoname
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 ILists
 ------
 
