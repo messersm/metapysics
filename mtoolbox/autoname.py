@@ -10,32 +10,32 @@ Import the descriptor using ``from mtoolbox.autoname import Autoname``.
 
 Example:
 
-    >>> class Object(object):
-    ...     name = Autoname()
-    >>> o = Object()
-    >>> o.name
-    'o'
+>>> class Object(object):
+...     name = Autoname()
+>>> o = Object()
+>>> o.name
+'o'
 
 By default Autoname will return the outer-most name that was defined
 for the object:
 
-    >>> class Object(object):
-    ...     name = Autoname()
-    >>> def func(anobject):
-    ...     return anobject.name
-    >>> o = Object()
-    >>> func(o)
-    'o'
+>>> class Object(object):
+...     name = Autoname()
+>>> def func(anobject):
+...     return anobject.name
+>>> o = Object()
+>>> func(o)
+'o'
 
 You can change this behaviour by using the 'inner' keyword:
 
-    >>> class Object(object):
-    ...     name = Autoname(inner=True)
-    >>> o = Object()
-    >>> def func(anobject):
-    ...     return anobject.name
-    >>> func(o)
-    'anobject'
+>>> class Object(object):
+...     name = Autoname(inner=True)
+>>> o = Object()
+>>> def func(anobject):
+...     return anobject.name
+>>> func(o)
+'anobject'
 
 Note:
     Please be aware, that getting the inner-most name, is not what you
@@ -49,10 +49,38 @@ Note:
     >>> o.printname()
     self
 
+    When in automatic mode (see the class documentation below) the
+    descriptor will always return a name, that is in some callframe
+    dictionary. If you delete a name, it will use another one, that
+    is still in use:
+
+    >>> class Object(object):
+    ...     name = Autoname()
+    >>> o = Object()
+    >>> o.name
+    'o'
+    >>> g = o
+    >>> del o
+    >>> g.name
+    'g'
+
+    This can be helped a bit by using the 'bind' keyword argument and
+    calling <object>.name with the name that should be used first:
+
+    >>> class Object(object):
+    ...     name = Autoname(bind=True)
+    >>> o = Object()
+    >>> o.name
+    'o'
+    >>> g = o
+    >>> del o
+    >>> g.name
+    'o'
+
 Warning:
     Defining multiple names for an object in the same call frame (which is
     easily said the same level of indention in your program) will
-    cause undefinied behaviour, depending on the Python interpreter:
+    cause undetermined behaviour, depending on the Python interpreter:
 
     >>> class Object(object):
     ...     name = Autoname()
@@ -72,14 +100,16 @@ class Autoname(object):
     Args:
         initval (str, bool, None): The initial name
         inner (bool): Return the inner-most name of the object (or not)
+        bind (bool): Bind the descriptor to the first name it returns
 
     Returns:
         Autoname: An Autoname instance
     """
 
-    def __init__(self, initval=True, inner=False):
+    def __init__(self, initval=True, inner=False, bind=False):
         self.val = None
         self.inner = inner
+        self.bind = bind
         self.__set__(None, initval)
 
     def __get__(self, theobject, objtype):
@@ -89,7 +119,6 @@ class Autoname(object):
             str or None: the name of the object
 
         Usage:
-
             >>> class Object(object):
             ...     name = Autoname()
             >>> obj = Object()
@@ -117,13 +146,19 @@ class Autoname(object):
 
                 for name, obj in frametuple[0].f_locals.items():
                     # found a name, but keep searching in order to get
-                    # the outer-most name unless first is set.
+                    # the outer-most name unless inner == True
                     if obj is theobject:
                         thename = name
                         if self.inner:
+                            self.__bind_if_wanted(thename)
                             return thename
 
+            self.__bind_if_wanted(thename)
             return thename
+
+    def __bind_if_wanted(self, name):
+        if self.bind:
+            self.__set__(None, name)
 
     def __set__(self, theobject, val):
         """Set the name of the theobject
