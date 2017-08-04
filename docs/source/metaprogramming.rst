@@ -17,3 +17,12 @@ ILists
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+Instance Logging
+----------------
+
+.. automodule:: mtoolbox.instancelog
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -12,9 +12,12 @@ Example:
 
 >>> class Object(object):
 ...     name = Autoname()
->>> o = Object()
->>> o.name
-'o'
+>>> obj1 = Object()
+>>> obj1.name
+'obj1'
+>>> obj2 = Object()
+>>> obj2.name
+'obj2'
 
 By default Autoname will return the outer-most name that was defined
 for the object:
