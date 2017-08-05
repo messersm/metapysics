@@ -15,6 +15,7 @@ Example:
 In this example ``MyClass1`` objects will not be logged, while
 ``MyClass2`` objects will be logged:
 
+>>> import instancelog
 >>> class MyClass1(object):
 ...     def __repr__(self):
 ...         return 'MyClass1 object'
@@ -60,5 +61,4 @@ def disable():
 
 if __name__ == '__main__':
     import doctest
-    instancelog = sys.modules['__main__']
     doctest.testmod()
