@@ -15,7 +15,7 @@ Example:
 In this example ``MyClass1`` objects will not be logged, while
 ``MyClass2`` objects will be logged:
 
->>> import instancelog
+>>> from . import instancelog
 >>> class MyClass1(object):
 ...     def __repr__(self):
 ...         return 'MyClass1 object'
