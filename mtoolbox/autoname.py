@@ -101,19 +101,21 @@ class Autoname(object):
     """Create a new Autoname descriptor
 
     Args:
-        initval (str, bool, None): The initial name
+        slot (str):   The instance attribute name
+                      for explicit name assignment.
         inner (bool): Return the inner-most name of the object (or not)
-        bind (bool): Bind the descriptor to the first name it returns
+        bind (bool):  Bind the descriptor to the first name it returns
 
     Returns:
         Autoname: An Autoname instance
     """
 
-    def __init__(self, initval=True, inner=False, bind=False):
-        self.val = None
+    def __init__(self, slot='__name', inner=False, bind=False):
+        if not isinstance(slot, str) or not slot:
+            raise TypeError("'slot' keyword must be an non-empty string.")
+        self.slot = slot
         self.inner = inner
         self.bind = bind
-        self.__set__(None, initval)
 
     def __get__(self, theobject, objtype):
         """Return the name of theobject or None
@@ -131,9 +133,11 @@ class Autoname(object):
             >>> obj.name
             'another name'
         """
-        if isinstance(self.val, str):
-            return self.val
-        elif self.val is False or self.val is None:
+        val = getattr(theobject, self.slot, True)
+
+        if isinstance(val, str):
+            return val
+        elif val is False or val is None:
             return None
         else:
             # If we really didn't find a name, we return None
@@ -153,15 +157,15 @@ class Autoname(object):
                     if obj is theobject:
                         thename = name
                         if self.inner:
-                            self.__bind_if_wanted(thename)
+                            self.__bind_if_wanted(theobject, thename)
                             return thename
 
-            self.__bind_if_wanted(thename)
+            self.__bind_if_wanted(theobject, thename)
             return thename
 
-    def __bind_if_wanted(self, name):
+    def __bind_if_wanted(self, theobject, thename):
         if self.bind:
-            self.__set__(None, name)
+            self.__set__(theobject, thename)
 
     def __set__(self, theobject, val):
         """Set the name of the theobject
@@ -184,20 +188,49 @@ class Autoname(object):
         Usage:
             >>> class Object(object):
             ...     name = Autoname()
-            >>> o = Object()
-            >>> o.name = 'k'
-            >>> o.name
+            >>> o1 = Object()
+            >>> o2 = Object()
+            >>> o1.name = 'k'
+            >>> o2.name = 'm'
+            >>> o1.name
             'k'
-            >>> o.name = True
-            >>> o.name
-            'o'
-            >>> o.name = False
-            >>> str(o.name)
+            >>> o2.name
+            'm'
+            >>> o1.name = True
+            >>> o1.name
+            'o1'
+            >>> o1.name = False
+            >>> str(o1.name)
             'None'
-            >>> o.name = 4
+            >>> o1.name = 4
             Traceback (most recent call last):
             ...
             TypeError: Autoname must be set to str, bool, NoneType
+
+            Note:
+                Setting the name of an object to an explicit value
+                will save that value as set the '__name' by default.
+                You can change this by setting 'slot' on the Autoname
+                descriptor:
+
+                >>> class Object1(object):
+                ...     name = Autoname()
+                >>> class Object2(object):
+                ...     name = Autoname(slot='__thename')
+                >>> obj1 = Object1()
+                >>> obj2 = Object2()
+                >>> obj1.__name = 'an object'
+                >>> obj2.__name = 'an object'
+                >>> obj1.name = 'first object'
+                >>> obj1.name
+                'first object'
+                >>> obj1.__name
+                'first object'
+                >>> obj2.name = 'second object'
+                >>> obj2.name
+                'second object'
+                >>> obj2.__name
+                'an object'
         """
         types = (str, bool, type(None))
 
@@ -205,7 +238,7 @@ class Autoname(object):
             raise TypeError("Autoname must be set to %s" % ", ".join(
                 [t.__name__ for t in types]))
 
-        self.val = val
+        setattr(theobject, self.slot, val)
 
 if __name__ == '__main__':
     doctest.testmod()
